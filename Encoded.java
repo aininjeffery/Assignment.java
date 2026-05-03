@@ -1,5 +1,6 @@
 import java.util.*;
 import javax.swing.JOptionPane;
+import java.awt.*;
 
 //Main Function
 public class Encoded {
@@ -18,6 +19,24 @@ public class Encoded {
         if (checkStringValidity(inputText)){
             charCount = countCharacters(inputText);
             JOptionPane.showMessageDialog(null, "Total number of characters are " + charCount);
+            int groupShift = generateShift(groupID);
+            int finalShift = groupShift + charCount;
+
+            //required UI
+            JFrame frame = new JFrame("Final Shift Result");
+            frame.setSize(250, 150);
+            frame.setLayout(new FlowLayout());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            JLabel label = new JLabel("Final Shift:");
+            JTextField field = new JTextField(10);
+            field.setText(String.valueOf(finalShift));
+            field.setEditable(false);
+
+            frame.add(label);
+            frame.add(field);
+
+            frame.setVisible(true);
         }
         else 
             JOptionPane.showMessageDialog(null, "Your input is not a String in lowercase!");
@@ -47,5 +66,15 @@ public static int countCharacters(String inputText){
     int count = inputText.replace(" ", "").length();
     return count;
 }
-
+// ================= MEMBER 2 =================
+// Contributed by: Ailin Najwa
+// Role: Hashing & Shift Engine
+// - Generates groupShift using hashCode()
+// - Ensures shift range between 1 and 10
+// - Supports finalShift calculation
+  public static int generateShift(String groupID) {
+        int hash = Math.abs(groupID.hashCode()); //convert to positive number
+          // ensure value between 1 and 10
+        return (hash % 10) + 1;
+    }
 }
