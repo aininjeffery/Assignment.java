@@ -22,9 +22,13 @@ public class Encoded {
             int groupShift = generateShift(groupID);
             int finalShift = groupShift + charCount;
 
+            // Contributed by afiq
+            // Process the input string through the encryption algorithm
+            resultText = applyCipher(inputText, finalShift);
+
             //required UI
             JFrame frame = new JFrame("Final Shift Result");
-            frame.setSize(250, 150);
+            frame.setSize(250, 250); // Increased height from 150 to 250 so the new text box fits
             frame.setLayout(new FlowLayout());
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -33,8 +37,18 @@ public class Encoded {
             field.setText(String.valueOf(finalShift));
             field.setEditable(false);
 
+            // Contibutd by afiq
+            JLabel resultLabel = new JLabel("Encoded Result:");
+            JTextArea resultArea = new JTextArea(2, 15);
+            resultArea.setText(resultText);
+            resultArea.setEditable(false);
+
             frame.add(label);
             frame.add(field);
+            
+            // Contributed by afiq
+            frame.add(resultLabel);
+            frame.add(resultArea);
 
             frame.setVisible(true);
         }
@@ -76,5 +90,37 @@ public static int countCharacters(String inputText){
         int hash = Math.abs(groupID.hashCode()); //convert to positive number
           // ensure value between 1 and 10
         return (hash % 10) + 1;
+    }
+
+// ================= MEMBER 3 =================
+// Contributed by: Abg Afiq Aiman
+// Role: The Encryption Algorithm
+// - Applies cipher to lowercase letters and digits
+// - Leaves spaces unchanged
+  public static String applyCipher(String inputText, int shift) {
+        String encodedText = ""; 
+        
+        for (int i = 0; i < inputText.length(); i++) {
+            char c = inputText.charAt(i);
+            
+            if (c >= 'a' && c <= 'z') {
+                int shiftedValue = (c - 'a' + shift) % 26;
+                char newChar = (char) (shiftedValue + 'a');
+                encodedText = encodedText + newChar;
+            } 
+            else if (c >= '0' && c <= '9') {
+                int shiftedValue = (c - '0' + shift) % 10;
+                char newChar = (char) (shiftedValue + '0');
+                encodedText = encodedText + newChar;
+            } 
+            else if (c == ' ') {
+                encodedText = encodedText + c;
+            } 
+            else {
+                encodedText = encodedText + c;
+            }
+        }
+        
+        return encodedText;
     }
 }
