@@ -5,4 +5,45 @@ import javax.swing.*;
 // Contributed by: Nur Ainin Sofiya binti Jeffery
 // Role: GUI Framework & Integration
 // - Create the main class and the main(String[] args) entry point
-// - Code the Encode Button to fetch input, run Member 1-3's method, and update the UI.
+// - Improve the Encode Button to fetch input, run Member 1-3's method, and update the UI.
+
+//Main function
+public class Assignment {
+    public static void main(String[] args) {
+        String input = JOptionPane.showInputDialog("Enter text to encode (lowercase/numbers):");
+
+        if (input == null) return;
+
+        if (Encoded.checkStringValidity(input)) {
+            // Demonstrate OOP by creating the object
+            Encoded encoder = new Encoded(input);
+            
+            int groupShift = encoder.generateShift();
+            int finalShift = groupShift + encoder.getCharCount();
+            String resultText = encoder.applyCipher(finalShift);
+
+            //contributed by afiq, improved by Ainin
+            JFrame frame = new JFrame("Encoding Result");
+            frame.setSize(400, 300);
+            frame.setLayout(new GridLayout(5, 1, 0, 10)); 
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            frame.add(new JLabel("  Non-space Characters: " + encoder.getCharCount()));
+            frame.add(new JLabel("  Final Shift: " + finalShift));
+            frame.add(new JLabel("  Encoded Result:"));
+
+            JTextArea resultArea = new JTextArea(2, 20);
+            resultArea.setText(resultText);
+            resultArea.setEditable(false);
+            resultArea.setLineWrap(true); 
+
+            //contributed by Ainin
+            frame.add(new JScrollPane(resultArea)); 
+
+            frame.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Encoding successful!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid input! Use lowercase letters, numbers, and spaces only.");
+        }
+    }
+}
