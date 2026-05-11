@@ -21,7 +21,7 @@ public class Assignment {
             
             int groupShift = Encoded.generateShift(groupID);
             int finalShift = groupShift + encoder.getCharCount(); //calling via 'encoder' because removed static for encapsulation
-            String resultText = encoder.applyCipher(finalShift);
+            String resultText = encoder.applyCipher(input, finalShift);
 
             //required GUI
             //contributed by afiq, improved by Ainin
@@ -37,7 +37,8 @@ public class Assignment {
             JTextArea resultArea = new JTextArea(2, 20);
             resultArea.setText(resultText);
             resultArea.setEditable(false);
-            resultArea.setLineWrap(true); 
+            resultArea.setLineWrap(true);  //Wrap text so it does not go off-screen
+            resultArea.setWrapStyleWord(true); //Ensures words are not split off mid-line
 
             //contributed by Ainin
             frame.add(new JScrollPane(resultArea));
