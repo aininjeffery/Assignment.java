@@ -10,6 +10,7 @@ import javax.swing.*;
 //Main function
 public class Assignment {
     public static void main(String[] args) {
+        String groupID = "G04/SE-G10";
         String input = JOptionPane.showInputDialog("Enter text to encode (lowercase/numbers):");
 
         if (input == null) return;
@@ -18,10 +19,11 @@ public class Assignment {
             // Demonstrate OOP by creating the object
             Encoded encoder = new Encoded(input);
             
-            int groupShift = encoder.generateShift();
-            int finalShift = groupShift + encoder.getCharCount();
+            int groupShift = Encoded.generateShift(groupID);
+            int finalShift = groupShift + encoder.getCharCount(); //calling via 'encoder' because removed static for encapsulation
             String resultText = encoder.applyCipher(finalShift);
 
+            //required GUI
             //contributed by afiq, improved by Ainin
             JFrame frame = new JFrame("Encoding Result");
             frame.setSize(400, 300);
@@ -38,7 +40,7 @@ public class Assignment {
             resultArea.setLineWrap(true); 
 
             //contributed by Ainin
-            frame.add(new JScrollPane(resultArea)); 
+            frame.add(new JScrollPane(resultArea));
 
             frame.setVisible(true);
             JOptionPane.showMessageDialog(null, "Encoding successful!");
