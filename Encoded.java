@@ -1,126 +1,97 @@
-import java.util.*;
-import javax.swing.*;
-import java.awt.*;
-
-//Main Function
 public class Encoded {
+        //Variable declaration - 'final' improves security
+        private final String inputText;
+        private final int charCount;
+        private String resultText;
+        private final String groupID = "G04/SE-G10"; //Hardcoded secret group ID
 
-    public static void main(String[] args) {
-
-        //Variable declaration
-        String inputText;
-        int charCount;
-        String resultText;
-        String groupID = "G02/SE";
-
-        //User input String
-        inputText = JOptionPane.showInputDialog("Enter your full name in lowercase:");
-
-        if (checkStringValidity(inputText)){
-            charCount = countCharacters(inputText);
-            JOptionPane.showMessageDialog(null, "Total number of characters are " + charCount);
-            int groupShift = generateShift(groupID);
-            int finalShift = groupShift + charCount;
-
-            // Contributed by afiq
-            // Process the input string through the encryption algorithm
-            resultText = applyCipher(inputText, finalShift);
-
-            //required UI
-            JFrame frame = new JFrame("Final Shift Result");
-            frame.setSize(250, 250); // Increased height from 150 to 250 so the new text box fits
-            frame.setLayout(new FlowLayout());
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            JLabel label = new JLabel("Final Shift:");
-            JTextField field = new JTextField(10);
-            field.setText(String.valueOf(finalShift));
-            field.setEditable(false);
-
-            // Contibutd by afiq
-            JLabel resultLabel = new JLabel("Encoded Result:");
-            JTextArea resultArea = new JTextArea(2, 15);
-            resultArea.setText(resultText);
-            resultArea.setEditable(false);
-
-            frame.add(label);
-            frame.add(field);
-            
-            // Contributed by afiq
-            frame.add(resultLabel);
-            frame.add(resultArea);
-
-            frame.setVisible(true);
+        //Constructors
+        public Encoded() {
+            this.inputText = "";
+            this.charCount = 0;
         }
-        else 
-            JOptionPane.showMessageDialog(null, "Your input is not a String in lowercase!");
-    }
 
-
-//Subclass: To validate String Characters - Only accepts lowercase letters and whitespace
-public static boolean checkStringValidity(String inputText){
-    String input = inputText.replaceAll(" ", ""); //To remove whitespace from the String
-
-    //To loop through each character in the String
-    for (char str : input.toCharArray()){
-        //Condition: Check if characters are lower than 'a' and larger than 'z'
-        if (str < 'a' || str > 'z'){
-            return false;
+        public Encoded (String inputText) {
+            this.inputText = inputText;
+            this.charCount = countCharacter(inputText);
         }
-        //Otherwise, it is lowercase letters!
-        else
-            continue;
-    }
-    return true;
-}
 
-// Subclass: Count Characters
-public static int countCharacters(String inputText){
-    //Count characters in String excluding the whitespace
-    int count = inputText.replace(" ", "").length();
-    return count;
-}
-// ================= MEMBER 2 =================
-// Contributed by: Ailin Najwa
-// Role: Hashing & Shift Engine
-// - Generates groupShift using hashCode()
-// - Ensures shift range between 1 and 10
-// - Supports finalShift calculation
-  public static int generateShift(String groupID) {
+        //Validation Logic
+        //Subclass: To validate String Characters - Only accepts lowercase letters and whitespace
+        public static boolean checkStringValidity(String inputText){
+            if (inputText == null || inputText.isEmpty()) return false;
+
+            for (char str : inputText.toCharArray()){
+                //Condition: If it;s not a letter and not a digit and not a space, it;s invalid
+                if (!Character.isLowerCase(str) && !Character.isDigit(str) && str != ' ') {
+                    return false;
+                }
+        
+            }
+            return true;
+        }
+
+        //Subclass: Count characters excluding the whitespace
+        //Fixed by Ainin: Added 'final' to satisfy constructor safety
+        public final int countCharacter(String inputText){
+            if (inputText == null) return 0;
+            return inputText.replace(" ", "").length();
+        }
+
+    // ================= MEMBER 2 =================
+    // Contributed by: Ailin Najwa
+    // Role: Hashing & Shift Engine
+    // - Generates groupShift using hashCode() from "G04/SE-G10"
+    // - Ensures shift range between 1 and 10
+    // - Supports finalShift calculation
+    public static int generateShift(String groupID) {
         int hash = Math.abs(groupID.hashCode()); //convert to positive number
-          // ensure value between 1 and 10
+        // ensure value between 1 and 10
         return (hash % 10) + 1;
     }
 
-// ================= MEMBER 3 =================
-// Contributed by: Abg Afiq Aiman
-// Role: The Encryption Algorithm
-// - Applies cipher to lowercase letters and digits
-// - Leaves spaces unchanged
-  public static String applyCipher(String inputText, int shift) {
-        String encodedText = ""; 
+    // ================= MEMBER 3 =================
+    // Contributed by: Abg Afiq Aiman
+    // Role: The Encryption Algorithm
+    // - Applies cipher to lowercase letters and digits
+    // - Leaves spaces unchanged
+    public String applyCipher(String inputText, int shift) {
+        StringBuilder encodedText = new StringBuilder(); //(StringBuilder = Java tools(string) to improve memory efficiency
         
         for (int i = 0; i < inputText.length(); i++) {
             char c = inputText.charAt(i);
             
             if (c >= 'a' && c <= 'z') {
+                // Formula: (c - 'a' + shift) % 26 + 'a'
                 int shiftedValue = (c - 'a' + shift) % 26;
-                char newChar = (char) (shiftedValue + 'a');
-                encodedText = encodedText + newChar;
+                encodedText.append((char) (shiftedValue + 'a'));
             } 
             else if (c >= '0' && c <= '9') {
+                // Formula: (c - '0' + shift) % 10 + '0'
                 int shiftedValue = (c - '0' + shift) % 10;
-                char newChar = (char) (shiftedValue + '0');
-                encodedText = encodedText + newChar;
-            } 
-            else if (c == ' ') {
-                encodedText = encodedText + c;
+                encodedText.append((char) (shiftedValue + '0'));
             } 
             else {
-                encodedText = encodedText + c;
+                encodedText.append(c);
             }
         }
-        
-        return encodedText;
+        this.resultText = encodedText.toString();
+        return this.resultText;
+    }
+    public String getInputText() {
+        return this.inputText;
+    }
+
+    public String getGroupID() {
+        return this.groupID;
+    }
+
+    public int getCharCount() {
+        return this.charCount;
+    }
+    
+    public String getResultText() {
+        return this.resultText;
     }
 }
+
