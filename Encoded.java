@@ -13,7 +13,7 @@ public class Encoded {
 
         public Encoded (String inputText) {
             this.inputText = inputText;
-            this.charCount = countCharacter(inputText);
+            this.charCount = countCharacters(inputText);
         }
 
         //Validation Logic
